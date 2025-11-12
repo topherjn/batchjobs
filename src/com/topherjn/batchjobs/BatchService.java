@@ -1,16 +1,19 @@
 package com.topherjn.batchjobs;
 
-
+// Import all required classes from the new subpackages
 import com.topherjn.batchjobs.jobs.DataProcessor;
 import com.topherjn.batchjobs.jobs.ReviewAuditor;
 import com.topherjn.batchjobs.jobs.SalesReporter;
+import com.topherjn.batchjobs.visitor.JobVisitor;
+import com.topherjn.batchjobs.visitor.ReviewJobRunnerVisitor;
 
 import java.io.IOException;
-import java.util.Arrays; // For Arrays.copyOf
+// We no longer need java.util.Arrays
 
 /**
- * The main "mechanism" class.
- * It holds a plain array of abstract DataProcessor jobs and runs them.
+ * The main "mechanism" class, which contains the 'main' method.
+ * It is modified to remove the 'findReviewJobs' (instanceof) method
+ * and replace it with a polymorphic 'processJobsWithVisitor' method.
  */
 public class BatchService {
 
@@ -33,73 +36,63 @@ public class BatchService {
     }
 
     /**
-     * The core polymorphic mechanism.
-     * Iterates up to 'jobCount' and calls process() on each job.
+     * This method is unchanged. It runs ALL jobs.
      */
     public void runAllJobs() {
-        System.out.println("--- Starting E-commerce Batch Service ---");
-
+        System.out.println("--- Starting E-commerce Batch Service (All Jobs) ---");
         for (int i = 0; i < jobCount; i++) {
             DataProcessor job = jobs[i];
             System.out.println("Running job: " + job.getClass().getSimpleName() +
                     " on " + job.getInputFile().getName());
             try {
-                // THE POLYMORPHIC CALL:
                 job.process();
                 System.out.println(" > Success. Output: " + job.getOutputFile().getName());
             } catch (IOException e) {
                 System.err.println(" > FAILED: " + e.getMessage());
             }
         }
-        System.out.println("\n--- Batch Service Complete ---");
+        System.out.println("\n--- Batch Service (All Jobs) Complete ---");
     }
 
     /**
-     * CONCEPT 3: Searching an array of objects for a subset.
-     * Finds and returns a new array containing only the ReviewAuditor jobs.
+     * REMOVED: The 'findReviewJobs()' method (which used 'instanceof') is gone.
+     *
+     * NEW: This method is fully polymorphic and accepts a 'strategy'
+     * (the visitor) to apply to all jobs.
      */
-    public DataProcessor[] findReviewJobs() {
-        System.out.println("\n--- Searching for ReviewAuditor Jobs ---");
-        DataProcessor[] subset = new DataProcessor[jobCount];
-        int subsetCount = 0;
-
+    public void processJobsWithVisitor(JobVisitor visitor) {
+        System.out.println("\n--- Processing Jobs with Visitor: " + visitor.getClass().getSimpleName() + " ---");
         for (int i = 0; i < jobCount; i++) {
-            if (jobs[i] instanceof ReviewAuditor) {
-                subset[subsetCount] = jobs[i];
-                subsetCount++;
-            }
+            // We tell the job to 'accept' the visitor.
+            // The job and visitor handle the rest via double dispatch.
+            // This loop doesn't know what the visitor does.
+            jobs[i].accept(visitor);
         }
-        System.out.println("Found " + subsetCount + " review audit jobs.");
-        return Arrays.copyOf(subset, subsetCount);
     }
 
     /**
-     * Main method to set up and run the e-commerce demonstration.
+     * Main method, updated to use the new Visitor pattern.
      */
     public static void main(String[] args) {
         BatchService service = new BatchService();
 
-        // Add the new e-commerce jobs to the abstract array
+        // Add jobs to the polymorphic array (Unchanged)
         service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
         service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
 
-        // Run all jobs
+        // Step 1: Run all jobs normally (Concept 1 & 2)
         service.runAllJobs();
 
-        // --- Demonstrate Concept 3 & 4 ---
-        // 1. Search for the subset (Concept 3)
-        DataProcessor[] reviewJobs = service.findReviewJobs();
+        // --- Demonstrate Concept 3 & 4 (with Visitor) ---
 
-        // 2. Now, process ONLY that subset (Concept 4)
-        System.out.println("\n--- Processing ONLY the review job subset ---");
-        for (DataProcessor job : reviewJobs) {
-            try {
-                System.out.println("Running subset job: " + job.getInputFile().getName());
-                job.process(); // This polymorphic call *is* the "write to file" step
-            } catch (IOException e) {
-                System.err.println(" > FAILED: " + e.getMessage());
-            }
-        }
+        // Step 2: Create our "search and process" strategy (the Visitor).
+        // This object IS the "search for subset" logic.
+        JobVisitor reviewRunner = new ReviewJobRunnerVisitor();
+
+        // Step 3: Pass this strategy to the service.
+        // This single call fulfills both "search" and "process subset"
+        // without using 'instanceof'.
+        service.processJobsWithVisitor(reviewRunner);
     }
 }

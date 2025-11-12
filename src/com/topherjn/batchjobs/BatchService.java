@@ -14,7 +14,7 @@ import java.util.Arrays; // For Arrays.copyOf
  */
 public class BatchService {
 
-    private DataProcessor[] jobs;
+    private final DataProcessor[] jobs;
     private int jobCount;
     private static final int MAX_JOBS = 10;
 

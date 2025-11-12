@@ -1,0 +1,4 @@
+OrderID,ProductID,Quantity,PricePerItem
+A-001,SKU-X1,2,19.99
+A-002,SKU-Y4,1,150.50
+A-003,SKU-X1,1,19.99

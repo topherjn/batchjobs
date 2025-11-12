@@ -4,7 +4,7 @@ import java.io.*;
 
 public class SalesReporter extends DataProcessor {
 
-    protected SalesReporter(String inputFilename, String outputFilename) {
+    public SalesReporter(String inputFilename, String outputFilename) {
         super(inputFilename, outputFilename);
     }
 

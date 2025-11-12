@@ -8,21 +8,22 @@ import com.topherjn.batchjobs.jobs.SalesReporter;
 import java.io.IOException;
 import java.util.Arrays; // For Arrays.copyOf
 
-/**
- * The main "mechanism" class.
- * It holds a plain array of abstract DataProcessor jobs and runs them.
- */
+
 public class BatchService {
 
+    // instance variables
     private final DataProcessor[] jobs;
     private int jobCount;
     private static final int MAX_JOBS = 10;
 
+    // constructor creates an array of DataProcessors and a variable
+    // to keep track of how man juobs
     public BatchService() {
         this.jobs = new DataProcessor[MAX_JOBS];
         this.jobCount = 0;
     }
 
+    // add jobs to DataProcessor array
     public void addJob(DataProcessor job) {
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
@@ -32,10 +33,8 @@ public class BatchService {
         }
     }
 
-    /**
-     * The core polymorphic mechanism.
-     * Iterates up to 'jobCount' and calls process() on each job.
-     */
+    // iterate over all the DataProcessor jobs and do their tasks, depending on what kind of job
+    // each is
     public void runAllJobs() {
         System.out.println("--- Starting E-commerce Batch Service ---");
 
@@ -44,7 +43,7 @@ public class BatchService {
             System.out.println("Running job: " + job.getClass().getSimpleName() +
                     " on " + job.getInputFile().getName());
             try {
-                // THE POLYMORPHIC CALL:
+                // process is polymorphic
                 job.process();
                 System.out.println(" > Success. Output: " + job.getOutputFile().getName());
             } catch (IOException e) {
@@ -54,28 +53,23 @@ public class BatchService {
         System.out.println("\n--- Batch Service Complete ---");
     }
 
-    /**
-     * CONCEPT 3: Searching an array of objects for a subset.
-     * Finds and returns a new array containing only the ReviewAuditor jobs.
-     */
+    // search the array for certain kinds (subclasses) of jobs
     public DataProcessor[] findReviewJobs() {
         System.out.println("\n--- Searching for ReviewAuditor Jobs ---");
-        DataProcessor[] subset = new DataProcessor[jobCount];
-        int subsetCount = 0;
+        DataProcessor[] reviewProcessors = new DataProcessor[jobCount];
+        int reviewCount = 0;
 
         for (int i = 0; i < jobCount; i++) {
             if (jobs[i] instanceof ReviewAuditor) {
-                subset[subsetCount] = jobs[i];
-                subsetCount++;
+                reviewProcessors[reviewCount] = jobs[i];
+                reviewCount++;
             }
         }
-        System.out.println("Found " + subsetCount + " review audit jobs.");
-        return Arrays.copyOf(subset, subsetCount);
+        System.out.println("Found " + reviewCount + " review audit jobs.");
+        return Arrays.copyOf(reviewProcessors, reviewCount);
     }
 
-    /**
-     * Main method to set up and run the e-commerce demonstration.
-     */
+
     public static void main(String[] args) {
         BatchService service = new BatchService();
 

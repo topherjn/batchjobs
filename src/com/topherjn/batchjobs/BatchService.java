@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class BatchService {
 
-    private DataProcessor[] jobs;
+    private final DataProcessor[] jobs;
     private int jobCount;
     private static final int MAX_JOBS = 10;
 
@@ -56,7 +56,6 @@ public class BatchService {
 
     /**
      * REMOVED: The 'findReviewJobs()' method (which used 'instanceof') is gone.
-     *
      * NEW: This method is fully polymorphic and accepts a 'strategy'
      * (the visitor) to apply to all jobs.
      */

@@ -1,4 +1,6 @@
 package com.topherjn.batchjobs.jobs;
+
+import com.topherjn.batchjobs.visitor.JobVisitor;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -6,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * A concrete job that reads a customer review file, searches for
- * lines containing "[1-STAR]", and writes only those lines to an output file.
+ * Concrete job for auditing reviews.
+ * Modified to implement the 'accept' method.
  */
 public class ReviewAuditor extends DataProcessor {
 
@@ -15,22 +17,14 @@ public class ReviewAuditor extends DataProcessor {
         super(inputFilename, outputFilename);
     }
 
-    /**
-     * Overridden implementation of the 'process' method.
-     * This logic is specific to filtering (searching) a text file.
-     * Uses BufferedReader/BufferedWriter for performance.
-     */
     @Override
     public void process() throws IOException {
         int flaggedCount = 0;
-
-        // Use try-with-resources for efficient I/O
         try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()));
              BufferedWriter writer = new BufferedWriter(new FileWriter(getOutputFile()))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // This is the "search" part of the job
                 if (line.startsWith("[1-STAR]")) {
                     writer.write(line);
                     writer.newLine();
@@ -39,5 +33,15 @@ public class ReviewAuditor extends DataProcessor {
             }
         }
         System.out.println(" > Flagged " + flaggedCount + " negative review(s).");
+    }
+
+    /**
+     * Implements the 'accept' method.
+     * This calls the 'visit' method on the visitor, passing *this* object.
+     * The JVM will select the correct visit(ReviewAuditor) method overload.
+     */
+    @Override
+    public void accept(JobVisitor visitor) {
+        visitor.visit(this);
     }
 }

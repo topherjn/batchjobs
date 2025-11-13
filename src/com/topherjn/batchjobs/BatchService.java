@@ -8,22 +8,25 @@ import com.topherjn.batchjobs.jobs.SalesReporter;
 import java.io.IOException;
 import java.util.Arrays;
 
-
+/** The batch service */
 public class BatchService {
 
     // instance variables
+    // the core element is an array of all kinds of data processors - the scenario is that these reports are run
+    // periodically.  We keep track of the number of jobs because we're using a simple array (max size 10) to make the
+    // demo simpler
     private final DataProcessor[] jobs;
     private int jobCount;
     private static final int MAX_JOBS = 10;
 
     // constructor creates an array of DataProcessors and a variable
-    // to keep track of how man jobs
+    // to keep track of how many jobs
     public BatchService() {
         this.jobs = new DataProcessor[MAX_JOBS];
         this.jobCount = 0;
     }
 
-    // add jobs to DataProcessor array
+    // add jobs to DataProcessor array.  The array has a static max size
     public void addJob(DataProcessor job) {
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
@@ -43,7 +46,7 @@ public class BatchService {
             System.out.println("Running job: " + job.getClass().getSimpleName() +
                     " on " + job.getInputFile().getName());
             try {
-                // process is polymorphic
+                // process() is polymorphic
                 job.process();
                 System.out.println(" > Success. Output: " + job.getOutputFile().getName());
             } catch (IOException e) {
@@ -59,6 +62,7 @@ public class BatchService {
         DataProcessor[] reviewProcessors = new DataProcessor[jobCount];
         int reviewCount = 0;
 
+        // using instanceof to make the polymorphism clear
         for (int i = 0; i < jobCount; i++) {
             if (jobs[i] instanceof ReviewAuditor) {
                 reviewProcessors[reviewCount] = jobs[i];
@@ -66,14 +70,20 @@ public class BatchService {
             }
         }
         System.out.println("Found " + reviewCount + " review audit jobs.");
+
         return Arrays.copyOf(reviewProcessors, reviewCount);
     }
 
 
     public static void main(String[] args) {
+
+        // a BatchService object has a DataService array of max size 10
         BatchService service = new BatchService();
 
         // Add the new e-commerce jobs to the abstract array
+        // calculate total revenue from sales
+        // Detect low product reviews and report them in a separate file
+        // Detect low service reviews and report them in a separate file
         service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
         service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));

@@ -26,6 +26,7 @@ public class ReviewAuditor extends DataProcessor {
 
         // Using a BufferReader reader saves data in memory before processing in the algorithm and before writing to
         // disk, minimizing expensive file I/O operations.  Concepts 2, 3, 4.
+        // Uses try-with-resources to minimize unclosed files (another optimization)
         try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()));
              BufferedWriter writer = new BufferedWriter(new FileWriter(getOutputFile()))) {
 
@@ -34,6 +35,7 @@ public class ReviewAuditor extends DataProcessor {
             while ((line = reader.readLine()) != null) {
 
                 // "Bad" review also begin with the same pattern
+                // Detected bad reviews are written to the output file
                 if (line.startsWith("[1-STAR]")) {
                     writer.write(line);
                     writer.newLine();

@@ -26,7 +26,7 @@ public class BatchService {
         this.jobCount = 0;
     }
 
-    // add jobs to DataProcessor array.  The array has a static max size
+    // Add jobs to DataProcessor array.  The array has a static max size
     public void addJob(DataProcessor job) {
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
@@ -82,21 +82,21 @@ public class BatchService {
         BatchService service = new BatchService();
 
         // Add the new e-commerce jobs to the abstract array
-        // calculate total revenue from sales
+        // Calculate total revenue from sales
         // Detect low product reviews and report them in a separate file
         // Detect low service reviews and report them in a separate file
         service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
         service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
 
+
         // Run all jobs
         service.runAllJobs();
 
-        // --- Demonstrate Concepts 3 & 4 ---
-        // 1. Search for the subset (Concept 3)
+        // Search for the subset (Concept 3)
         DataProcessor[] reviewJobs = service.findReviewJobs();
 
-        // Write the subset to a file
+        // Write the subset to a file (Concept 4)
         System.out.println("\n--- Processing ONLY the review job subset ---");
         for (DataProcessor job : reviewJobs) {
             try {

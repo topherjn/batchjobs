@@ -15,7 +15,7 @@ public class ReviewAuditor extends DataProcessor {
         super(inputFilename, outputFilename);
     }
 
-    /** A ReviewAuditor 'processes' a review file by opening it for reading, searching for low reviews ('[1-STAR]'),
+    /** A ReviewAuditor 'processes' a review file by opening it for reading, detecting low reviews ('[1-STAR]'),
      *  and writing them to a flagged reviews file-- which is different from other DataProcessors.
      *  Concept 1 - Polymorphism */
     @Override

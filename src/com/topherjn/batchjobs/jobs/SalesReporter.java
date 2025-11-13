@@ -13,6 +13,7 @@ public class SalesReporter extends DataProcessor {
 
         double totalRevenue = 0.0;
 
+
         try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()))) {
             String line;
 

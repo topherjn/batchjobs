@@ -15,22 +15,18 @@ public class ReviewAuditor extends DataProcessor {
         super(inputFilename, outputFilename);
     }
 
-    /**
-     * Overridden implementation of the 'process' method.
-     * This logic is specific to filtering (searching) a text file.
-     * Uses BufferedReader/BufferedWriter for performance.
-     */
+
     @Override
     public void process() throws IOException {
         int flaggedCount = 0;
 
-        // Use try-with-resources for efficient I/O
+
         try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()));
              BufferedWriter writer = new BufferedWriter(new FileWriter(getOutputFile()))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // This is the "search" part of the job
+
                 if (line.startsWith("[1-STAR]")) {
                     writer.write(line);
                     writer.newLine();

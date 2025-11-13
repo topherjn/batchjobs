@@ -17,7 +17,7 @@ public class BatchService {
     private static final int MAX_JOBS = 10;
 
     // constructor creates an array of DataProcessors and a variable
-    // to keep track of how man juobs
+    // to keep track of how man jobs
     public BatchService() {
         this.jobs = new DataProcessor[MAX_JOBS];
         this.jobCount = 0;

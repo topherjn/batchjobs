@@ -57,6 +57,7 @@ public class BatchService {
     }
 
     // search the array for certain kinds (subclasses) of jobs
+    // Concept 3
     public DataProcessor[] findReviewJobs() {
         System.out.println("\n--- Searching for ReviewAuditor Jobs ---");
         DataProcessor[] reviewProcessors = new DataProcessor[jobCount];
@@ -91,11 +92,11 @@ public class BatchService {
         // Run all jobs
         service.runAllJobs();
 
-        // --- Demonstrate Concept 3 & 4 ---
+        // --- Demonstrate Concepts 3 & 4 ---
         // 1. Search for the subset (Concept 3)
         DataProcessor[] reviewJobs = service.findReviewJobs();
 
-        // 2. Now, process ONLY that subset (Concept 4)
+        // Write the subset to a file
         System.out.println("\n--- Processing ONLY the review job subset ---");
         for (DataProcessor job : reviewJobs) {
             try {

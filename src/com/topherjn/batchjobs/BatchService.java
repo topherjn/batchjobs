@@ -101,7 +101,7 @@ public class BatchService {
         for (DataProcessor job : reviewJobs) {
             try {
                 System.out.println("Running subset job: " + job.getInputFile().getName());
-                job.process(); // This polymorphic call *is* the "write to file" step
+                job.process(); // Polymorphic call on ReviewAuditors found
             } catch (IOException e) {
                 System.err.println(" > FAILED: " + e.getMessage());
             }

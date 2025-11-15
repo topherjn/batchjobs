@@ -1,49 +1,77 @@
-package com.topherjn.batchjobs.jobs;
+package com.topherjn.batchjobs;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import com.topherjn.batchjobs.jobs.DataProcessor;
+import com.topherjn.batchjobs.jobs.ReviewAuditor;
+import com.topherjn.batchjobs.jobs.SalesReporter;
+
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
- * A concrete job that filters a review file for negative (1-star) reviews.
+ * Orchestrates the execution of various batch jobs.
+ * This class contains the main method for the demonstration.
  */
-public class ReviewAuditor extends DataProcessor {
+public class BatchService {
+
+    // the core element is an array of all kinds of data processors
+    private final DataProcessor[] jobs;
+    // keep track of the number of jobs because we're using a simple array
+    private int jobCount;
+    private static final int MAX_JOBS = 10;
 
     /**
-     * Creates a new review auditor job.
-     *
-     * @param inputFilename  The input review file.
-     * @param outputFilename The output file for flagged reviews.
+     * Initializes the batch service with a fixed-size job array.
      */
-    public ReviewAuditor(String inputFilename, String outputFilename) {
-        super(inputFilename, outputFilename);
+    public BatchService() {
+        this.jobs = new DataProcessor[MAX_JOBS];
+        this.jobCount = 0;
     }
 
     /**
-     * Reads the review file, finds 1-star reviews, and writes them to the output.
+     * Adds a new job to the execution queue.
+     * If the queue is full, an error is printed.
      *
-     * @throws IOException if a file I/O error occurs.
+     * @param job The DataProcessor job to add.
      */
-    @Override
-    public void process() throws IOException {
-        int flaggedCount = 0;
-
-        // Use try-with-resources for efficient I/O
-        try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(getOutputFile()))) {
-            
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // This is the "search" part of the job
-                if (line.startsWith("[1-STAR]")) {
-                    writer.write(line);
-                    writer.newLine();
-                    flaggedCount++;
-                }
-            }
+    public void addJob(DataProcessor job) {
+        if (jobCount < MAX_JOBS) {
+            jobs[jobCount] = job;
+            jobCount++;
+        } else {
+            System.err.println("Job queue is full. Cannot add " + job.getClass().getSimpleName());
         }
-        System.out.println(" > Flagged " + flaggedCount + " negative review(s).");
+    }
+
+    /**
+     * Runs all jobs currently in the queue.
+     */
+    public void runAllJobs() {
+        // Left empty for live-coding
+    }
+
+    /**
+     * Searches the queue for all ReviewAuditor jobs.
+     *
+     * @return A new, non-null array containing only the ReviewAuditor jobs.
+     */
+    public DataProcessor[] findReviewJobs() {
+        // Left empty for live-coding
+        return new DataProcessor[0]; // Placeholder return
+    }
+
+    /**
+     * Main driver method for the demonstration.
+     *
+     * @param args Command line arguments (not used).
+     */
+    public static void main(String[] args) {
+
+        BatchService service = new BatchService();
+
+        service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
+        service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
+        service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
+
+        // Live-coding will start here
     }
 }

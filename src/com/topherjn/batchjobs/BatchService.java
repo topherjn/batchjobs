@@ -1,20 +1,15 @@
 package com.topherjn.batchjobs;
 
-
 import com.topherjn.batchjobs.jobs.DataProcessor;
 import com.topherjn.batchjobs.jobs.ReviewAuditor;
 import com.topherjn.batchjobs.jobs.SalesReporter;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-/** The batch service */
 public class BatchService {
 
-    // instance variables
-    // the core element is an array of all kinds of data processors - the scenario is that these reports are run
-    // periodically.  We keep track of the number of jobs because we're using a simple array (max size 10) to make the
-    // demo simpler
+    /** instance variables
+     * the core element is an array of all kinds of data processors - the scenario is that these reports are run
+     * periodically.  We keep track of the number of jobs because we're using a simple array (max size 10) to make the
+     * demo simpler */
     private final DataProcessor[] jobs;
     private int jobCount;
     private static final int MAX_JOBS = 10;
@@ -26,7 +21,7 @@ public class BatchService {
         this.jobCount = 0;
     }
 
-    // Add jobs to DataProcessor array.  The array has a static max size
+    // add jobs to the DataProcessor array
     public void addJob(DataProcessor job) {
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
@@ -36,75 +31,62 @@ public class BatchService {
         }
     }
 
-    // iterate over all the DataProcessor jobs and do their tasks, depending on what kind of job
-    // each is
     public void runAllJobs() {
-        System.out.println("--- Starting E-commerce Batch Service ---");
 
-        for (int i = 0; i < jobCount; i++) {
-            DataProcessor job = jobs[i];
-            System.out.println("Running job: " + job.getClass().getSimpleName() +
-                    " on " + job.getInputFile().getName());
-            try {
-                // process() is polymorphic
-                job.process();
-                System.out.println(" > Success. Output: " + job.getOutputFile().getName());
-            } catch (IOException e) {
-                System.err.println(" > FAILED: " + e.getMessage());
-            }
-        }
-        System.out.println("\n--- Batch Service Complete ---");
+        // Signal batch start
+
+
+        // iterate over jobs in the DataProcessor array (named "jobs")
+
+
+        // Signal batch end
+
     }
 
-    // search the array for certain kinds (subclasses) of jobs
-    // Concept 3
+    /** search the array for certain kinds (subclasses) of jobs
+     * Concept 3 */
     public DataProcessor[] findReviewJobs() {
-        System.out.println("\n--- Searching for ReviewAuditor Jobs ---");
-        DataProcessor[] reviewProcessors = new DataProcessor[jobCount];
-        int reviewCount = 0;
 
-        // using instanceof to make the polymorphism clear
-        for (int i = 0; i < jobCount; i++) {
-            if (jobs[i] instanceof ReviewAuditor) {
-                reviewProcessors[reviewCount] = jobs[i];
-                reviewCount++;
-            }
-        }
-        System.out.println("Found " + reviewCount + " review audit jobs.");
+        // Signal start of search
 
-        return Arrays.copyOf(reviewProcessors, reviewCount);
+        // create the array at a size to fit all jobs
+        // in order to accommodate all ReviewAudit jobs
+
+
+        // initialize a review count variable
+
+
+        // using instanceof, find only ReviewAuditor jobs
+        // and add them to the subset array
+
+
+        // Report how many ReviewAuditor jobs found
+
+        // return the subset of the DataProcessor array that contains only reviews jobs
+
+        return new DataProcessor[0]; // Placeholder return
     }
-
 
     public static void main(String[] args) {
 
+        // Instantiate the BatchService object
         // a BatchService object has a DataService array of max size 10
+        // and runs all the DataService jobs
+        // It then searches the subset of review jobs
         BatchService service = new BatchService();
 
-        // Add the new e-commerce jobs to the abstract array
-        // Calculate total revenue from sales
-        // Detect low product reviews and report them in a separate file
-        // Detect low service reviews and report them in a separate file
+        // add jobs to the DataService array
         service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
         service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
 
+        // run all the jobs
 
-        // Run all jobs
-        service.runAllJobs();
 
         // Search for the subset (Concept 3)
-        DataProcessor[] reviewJobs = service.findReviewJobs();
+
 
         // Write the subset to a file (Concept 4)
-        System.out.println("\n--- Processing ONLY the review job subset ---");
-        for (DataProcessor job : reviewJobs) {
-            try {
-                System.out.println("Running subset job: " + job.getInputFile().getName());
-                job.process(); // Polymorphic call on ReviewAuditors found
-            } catch (IOException e) {
-                System.err.println(" > FAILED: " + e.getMessage());
-            }
-        }
+
     }
 }

@@ -1,48 +1,58 @@
 package com.topherjn.batchjobs.jobs;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
+/**
+ * A concrete job that generates a total revenue report from a sales CSV.
+ */
 public class SalesReporter extends DataProcessor {
 
-    /** A SalesReader DataProcessor reads a sales file, totals revenue, and writes that total to a revenue report. */
+    /**
+     * Creates a new sales reporter job.
+     *
+     * @param inputFilename  The input sales CSV.
+     * @param outputFilename The output report file.
+     */
     public SalesReporter(String inputFilename, String outputFilename) {
         super(inputFilename, outputFilename);
     }
 
-    /** A SalesReporter 'processes' a sales csv file by opening it for reading, totaling up the revenue data contained
-     *  therein, and writing a total revenue report to a file-- which is different from other DataProcessors.
-     *  Concept 1 - Polymorphism */
+    /**
+     * Reads the sales CSV, calculates total revenue, and writes the report.
+     *
+     * @throws IOException if a file I/O error occurs.
+     */
     @Override
     public void process() throws IOException {
-
-        // initialize revenue total
         double totalRevenue = 0.0;
 
-        // Using a BufferReader reader saves data in memory before processing in the algorithm and before writing to
-        // disk, minimizing expensive file I/O operations.  Concepts 2, 3, 4.
-        // Uses try-with-resources to minimize unclosed files (another optimization)
+        // Use try-with-resources for optimized, safe file handling
         try (BufferedReader reader = new BufferedReader(new FileReader(getInputFile()))) {
             String line;
-
-            reader.readLine();
-
-            // one sale per line in csv format, so
-            while((line = reader.readLine()) != null) {
+            // Skip header line
+            reader.readLine(); 
+            
+            while ((line = reader.readLine()) != null) {
                 try {
                     String[] parts = line.split(",");
-
+                    // OrderID,ProductID,Quantity,PricePerItem
                     int quantity = Integer.parseInt(parts[2]);
                     double price = Double.parseDouble(parts[3]);
-                    totalRevenue += price * quantity;
+                    totalRevenue += (quantity * price);
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    System.err.println("Skipping malformed sales line: " + line);
+                    System.err.println(" > Skipping malformed sales line: " + line);
                 }
             }
         }
 
-        // Just one line is written per sales report, so writing only after loop termination
+        // Use try-with-resources for optimized, safe file writing
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(getOutputFile()))) {
-            writer.write(String.format("Total Revenue: %.2f", totalRevenue));
+            // Format to 2 decimal places for currency
+            writer.write(String.format("TotalRevenue: %.2f", totalRevenue));
         }
     }
 }

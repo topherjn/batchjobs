@@ -3,17 +3,23 @@ package com.topherjn.batchjobs.jobs;
 import java.io.File;
 import java.io.IOException;
 
-/** Base abstract class for batch processing data. Creates the contract for processing files with the abstract method
-*   process.  */
+/**
+ * The abstract contract for all batch processing jobs.
+ */
 public abstract class DataProcessor {
 
-    /**  once the input and output files are determined for a job, they don't change.
-    *   Private by Principle of Least Privilege (they could also be protected)  */
+    /* once the input and output files are determined for a job, they don't change.
+    * Private by Principle of Least Privilege  */
     private final File inputFile;
     private final File outputFile;
 
-    /** All data files that are processed will have an input file and output file
-    *   This object is only ever instantiated in subclasses, so make it protected, but not public */
+    /**
+     * Protected constructor for subclasses.
+     *
+     * @param inputFilename  The non-null name of the file to read.
+     * @param outputFilename The non-null name of the file to write.
+     * @throws IllegalArgumentException if filenames are null.
+     */
     protected DataProcessor(String inputFilename, String outputFilename) {
         if (inputFilename == null || outputFilename == null) {
             throw new IllegalArgumentException("Filenames cannot be null");
@@ -22,14 +28,26 @@ public abstract class DataProcessor {
         this.outputFile = new File(outputFilename);
     }
 
-    /** Abstract process method.  All DataProcessor jobs are processed in the batch, but that is done so in different
-    *  ways.  All subclasses must implement this method */
+    /**
+     * The core processing logic unique to each job.
+     * Subclasses must implement this method.
+     *
+     * @throws IOException if a file I/O error occurs.
+     */
     public abstract void process() throws IOException;
 
-    /** Accessors to private instance variables.  */
+    /**
+     * Gets the input file for this job.
+     * @return The input file.
+     */
     public File getInputFile() {
         return inputFile;
     }
+
+    /**
+     * Gets the output file for this job.
+     * @return The output file.
+     */
     public File getOutputFile() {
         return outputFile;
     }

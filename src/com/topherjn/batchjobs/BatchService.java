@@ -4,24 +4,35 @@ import com.topherjn.batchjobs.jobs.DataProcessor;
 import com.topherjn.batchjobs.jobs.ReviewAuditor;
 import com.topherjn.batchjobs.jobs.SalesReporter;
 
-public class   BatchService {
+import java.io.IOException;
+import java.util.Arrays;
 
-    /** instance variables
-     * the core element is an array of all kinds of data processors - the scenario is that these reports are run
-     * periodically.  We keep track of the number of jobs because we're using a simple array (max size 10) to make the
-     * demo simpler */
+/**
+ * Orchestrates the execution of various batch jobs.
+ * This class contains the main method for the demonstration.
+ */
+public class BatchService {
+
+    // the core element is an array of all kinds of data processors
     private final DataProcessor[] jobs;
+    // keep track of the number of jobs because we're using a simple array
     private int jobCount;
     private static final int MAX_JOBS = 10;
 
-    // constructor creates an array of DataProcessors and a variable
-    // to keep track of how many jobs
+    /**
+     * Initializes the batch service with a fixed-size job array.
+     */
     public BatchService() {
         this.jobs = new DataProcessor[MAX_JOBS];
         this.jobCount = 0;
     }
 
-    // add jobs to the DataProcessor array
+    /**
+     * Adds a new job to the execution queue.
+     * If the queue is full, an error is printed.
+     *
+     * @param job The DataProcessor job to add.
+     */
     public void addJob(DataProcessor job) {
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
@@ -31,22 +42,30 @@ public class   BatchService {
         }
     }
 
-    /** This method runs the batch of all the DataProcessor jobs */
+    /**
+     * Runs all jobs currently in the queue.
+     */
     public void runAllJobs() {
+        // Left empty for live-coding
 
         // Signal batch start
 
 
-        // iterate over jobs in the DataProcessor array (named "jobs")
+        // iterate over jobs in the DataProcessor array (named "jobs"),
+        // Launching the polymorphic process() method for each
 
 
         // Signal batch end
 
     }
 
-    /** search the array for certain kinds (subclasses) of jobs
-     * Concept 3 */
+    /**
+     * Searches the queue for all ReviewAuditor jobs.
+     *
+     * @return A new, non-null array containing only the ReviewAuditor jobs.
+     */
     public DataProcessor[] findReviewJobs() {
+        // Left empty for live-coding
 
         // Signal start of search
 
@@ -54,7 +73,7 @@ public class   BatchService {
         // in order to accommodate all ReviewAudit jobs
 
 
-        // initialize a review count variable
+        // initialize a review count variable for reporting purposes
 
 
         // using instanceof, find only ReviewAuditor jobs
@@ -68,18 +87,20 @@ public class   BatchService {
         return new DataProcessor[0]; // Placeholder return
     }
 
+    /**
+     * Main driver method for the demonstration.
+     *
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
 
-        // Instantiate the BatchService object
-        // a BatchService object has a DataService array of max size 10
-        // and runs all the DataService jobs
-        // It then searches the subset of review jobs
         BatchService service = new BatchService();
 
-        // add jobs to the DataService array
         service.addJob(new SalesReporter("sales.csv", "revenue_report.txt"));
         service.addJob(new ReviewAuditor("product_reviews.txt", "flagged_reviews.txt"));
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
+
+        // Live-coding will start here
 
         // run all the jobs
 
@@ -87,7 +108,6 @@ public class   BatchService {
         // Search for the subset (Concept 3)
 
 
-        // Write the subset to a file (Concept 4)
-
+        // Write the subset to a file (Concept 4) by way of process()
     }
 }

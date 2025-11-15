@@ -4,7 +4,7 @@ import com.topherjn.batchjobs.jobs.DataProcessor;
 import com.topherjn.batchjobs.jobs.ReviewAuditor;
 import com.topherjn.batchjobs.jobs.SalesReporter;
 
-public class BatchService {
+public class   BatchService {
 
     /** instance variables
      * the core element is an array of all kinds of data processors - the scenario is that these reports are run
@@ -31,6 +31,7 @@ public class BatchService {
         }
     }
 
+    /** This method runs the batch of all the DataProcessor jobs */
     public void runAllJobs() {
 
         // Signal batch start

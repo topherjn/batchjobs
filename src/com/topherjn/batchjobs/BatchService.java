@@ -104,7 +104,7 @@ public class BatchService {
 
         // run all the jobs - i.e. all the ReviewAudit and SalesReporter
         // jobs
-        service.runAllJobs();
+
 
         // Search for the subset (Concept 3)
 

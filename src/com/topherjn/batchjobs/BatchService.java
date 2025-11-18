@@ -102,8 +102,9 @@ public class BatchService {
 
         // Live-coding will start here
 
-        // run all the jobs
-
+        // run all the jobs - i.e. all the ReviewAudit and SalesReporter
+        // jobs
+        service.runAllJobs();
 
         // Search for the subset (Concept 3)
 

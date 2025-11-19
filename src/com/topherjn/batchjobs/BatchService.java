@@ -46,6 +46,7 @@ public class BatchService {
      * Runs all jobs currently in the queue.
      */
     public void runAllJobs() {
+        // DataProcessor dataProcessor = new DataProcessor("infile","outfile");  // **NO!!!**
         // Left empty for live-coding
         // Announce batch process start
         // iterate over jobs in the DataProcessor array (named "jobs"),

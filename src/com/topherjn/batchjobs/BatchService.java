@@ -47,16 +47,10 @@ public class BatchService {
      */
     public void runAllJobs() {
         // Left empty for live-coding
-
         // Signal batch start
-
-
         // iterate over jobs in the DataProcessor array (named "jobs"),
         // Launching the polymorphic process() method for each
-
-
         // Signal batch end
-
     }
 
     /**
@@ -66,22 +60,13 @@ public class BatchService {
      */
     public DataProcessor[] findReviewJobs() {
         // Left empty for live-coding
-
         // Signal start of search
-
         // create the array at a size to fit all jobs
         // in order to accommodate all ReviewAudit jobs
-
-
         // initialize a review count variable for reporting purposes
-
-
         // using instanceof, find only ReviewAuditor jobs
         // and add them to the subset array
-
-
         // Report how many ReviewAuditor jobs found
-
         // return the subset of the DataProcessor array that contains only reviews jobs
 
         return new DataProcessor[0]; // Placeholder return
@@ -101,14 +86,9 @@ public class BatchService {
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
 
         // Live-coding will start here
-
         // run all the jobs - i.e. all the ReviewAudit and SalesReporter
         // jobs
-
-
         // Search for the subset (Concept 3)
-
-
         // Write the subset to a file (Concept 4) by way of process()
     }
 }

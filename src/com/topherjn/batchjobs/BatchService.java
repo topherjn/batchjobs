@@ -47,10 +47,10 @@ public class BatchService {
      */
     public void runAllJobs() {
         // Left empty for live-coding
-        // Signal batch start
+        // Announce batch process start
         // iterate over jobs in the DataProcessor array (named "jobs"),
         // Launching the polymorphic process() method for each
-        // Signal batch end
+        // Announce batch process end
     }
 
     /**
@@ -89,6 +89,9 @@ public class BatchService {
         // run all the jobs - i.e. all the ReviewAudit and SalesReporter
         // jobs
         // Search for the subset (Concept 3)
+        // Announce subset search start
         // Write the subset to a file (Concept 4) by way of process()
+        // Announce subset search end
+
     }
 }

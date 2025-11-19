@@ -41,6 +41,7 @@ public abstract class DataProcessor {
      * @return The input file.
      */
     public File getInputFile() {
+
         return inputFile;
     }
 
@@ -49,6 +50,7 @@ public abstract class DataProcessor {
      * @return The output file.
      */
     public File getOutputFile() {
+
         return outputFile;
     }
 }

@@ -34,6 +34,7 @@ public class BatchService {
      * @param job The DataProcessor job to add.
      */
     public void addJob(DataProcessor job) {
+        // limit to max size of array and keep track of how many jobs added
         if (jobCount < MAX_JOBS) {
             jobs[jobCount] = job;
             jobCount++;
@@ -61,7 +62,7 @@ public class BatchService {
      */
     public DataProcessor[] findReviewJobs() {
         // Left empty for live-coding
-        // Signal start of search
+        // Announce start of search
         // create the array at a size to fit all jobs
         // in order to accommodate all ReviewAudit jobs
         // initialize a review count variable for reporting purposes
@@ -88,6 +89,7 @@ public class BatchService {
 
         // Live-coding will start here
         // run all the jobs - i.e. all the ReviewAudit and SalesReporter jobs
+
         // Search for the subset (Concept 3)
         // Announce subset search start
         // Write the subset to a file (Concept 4) by way of process()

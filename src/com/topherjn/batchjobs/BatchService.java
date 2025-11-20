@@ -87,8 +87,7 @@ public class BatchService {
         service.addJob(new ReviewAuditor("service_reviews.txt", "flagged_service_reviews.txt"));
 
         // Live-coding will start here
-        // run all the jobs - i.e. all the ReviewAudit and SalesReporter
-        // jobs
+        // run all the jobs - i.e. all the ReviewAudit and SalesReporter jobs
         // Search for the subset (Concept 3)
         // Announce subset search start
         // Write the subset to a file (Concept 4) by way of process()
